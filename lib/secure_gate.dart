@@ -78,7 +78,10 @@ class _SecureGateState extends State<SecureGate>
       _gateVisibility.value = 1;
     } else if (_lock == true && _secureApplicationController!.locked == false) {
       _lock = false;
-      _gateVisibility.animateBack(0).orCancel;
+      // Not .orCancel: nothing awaits this future, and when the app goes to
+      // the background again during the fade, lock() cancels the ticker and
+      // .orCancel would throw an unhandled TickerCanceled.
+      _gateVisibility.animateBack(0);
     }
   }
 
